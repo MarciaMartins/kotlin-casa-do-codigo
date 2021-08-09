@@ -15,6 +15,8 @@ class CadastraAutorController(val autorRepository: AutorRepository) {
         println("Requisição => ${request}")
 
         val autor = request.paraAutor()
+
+        
         autorRepository.save(autor)
 
         println("Autor => ${autor.nome}")
