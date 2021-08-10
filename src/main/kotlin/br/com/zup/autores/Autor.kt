@@ -4,15 +4,19 @@ import java.time.LocalDateTime
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
+import javax.persistence.OneToOne
 
 @Entity
 class Autor (val nome: String,
              val email: String,
-             var descricao: String)
+             var descricao: String,
+             var endereco: Endereco)
 {
     @Id
     @GeneratedValue
     var id: Long? = null
 
     val criadoEm: LocalDateTime = LocalDateTime.now()
+
+
 }
