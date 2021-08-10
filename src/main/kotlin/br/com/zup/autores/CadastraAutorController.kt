@@ -4,8 +4,8 @@ import io.micronaut.http.HttpResponse
 import io.micronaut.http.annotation.*
 import io.micronaut.http.uri.UriBuilder
 import io.micronaut.validation.Validated
-import java.util.*
 import javax.validation.Valid
+import javax.validation.constraints.Email
 
 @Validated
 @Controller("/autores")
@@ -25,10 +25,19 @@ class CadastraAutorController(val autorRepository: AutorRepository) {
     }
 
     @Get
-    fun listarTodos(): HttpResponse<List<DetalheAutorResponse>> {
-        val autores =  autorRepository.findAll()
-        val resposta = autores.map { autor -> DetalheAutorResponse(autor) }
-        return HttpResponse.ok(resposta)
+    fun listarTodos(@QueryValue(defaultValue = "") email: String): HttpResponse<Any> {
+        if(email.isBlank()){
+            val autores =  autorRepository.findAll()
+            val resposta = autores.map { autor -> DetalheAutorResponse(autor) }
+            return HttpResponse.ok(resposta)
+        }
+        val autorRecuperado = autorRepository.findByEmail(email)
+        if(autorRecuperado.isEmpty){
+            return HttpResponse.notFound()
+        }
+        val autor = autorRecuperado.get()
+        return HttpResponse.ok(DetalheAutorResponse(autor))
+
     }
 
     @Put("/{id}")
